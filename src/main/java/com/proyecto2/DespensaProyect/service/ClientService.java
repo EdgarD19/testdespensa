@@ -43,24 +43,31 @@ public class ClientService {
     private ClienteRepository clienteRepository;
 
     @Transactional
-    public void createClient(ClientRequest request){
-        Ciudad ciudad = ciudadRepository.findById(request.getIdCity()).orElseThrow(() -> new RuntimeException("Ciudad no emncontrada"));
-        Long nationalityId =
-                request.getNationality() != null ? request.getNationality() : 1L;
-        Pais pais = paisRepository.findById(nationalityId)
-                .orElseThrow(() -> new RuntimeException("Pais no encontrado"));
-        Cliente newClient = request.toEntity();
-        newClient.setFirstName(request.getFirstName());
-        newClient.setLastName(request.getLastName());
-        newClient.setDateBirth(request.getBirthDate());
-        newClient.setCiudad(ciudad);
-        newClient.setPhone(request.getPhoneNumber());
-        newClient.setDocumentNumber(request.getDocumentNumber());
-        newClient.setGender(request.getGender());
-        newClient.setNationality(pais);
-        newClient.setDocumentType(request.getDocumentType());
-        clienteRepository.save(newClient);
+public void createClient(ClientRequest request){
+    // Ciudad: solo busca si viene el id, sino deja null
+    Ciudad ciudad = null;
+    if (request.getIdCity() != null) {
+        ciudad = ciudadRepository.findById(request.getIdCity())
+                .orElseThrow(() -> new RuntimeException("Ciudad no encontrada"));
     }
+
+    // Pais: usa 1 (Paraguay) si no viene
+    Long nationalityId = request.getNationality() != null ? request.getNationality() : 1L;
+    Pais pais = paisRepository.findById(nationalityId)
+            .orElseThrow(() -> new RuntimeException("Pais no encontrado"));
+
+    Cliente newClient = request.toEntity();
+    newClient.setFirstName(request.getFirstName());
+    newClient.setLastName(request.getLastName());
+    newClient.setDateBirth(request.getBirthDate());
+    newClient.setCiudad(ciudad);  // puede ser null
+    newClient.setPhone(request.getPhoneNumber());
+    newClient.setDocumentNumber(request.getDocumentNumber());
+    newClient.setGender(request.getGender());
+    newClient.setNationality(pais);
+    newClient.setDocumentType(request.getDocumentType());
+    clienteRepository.save(newClient);
+}
 
     @Transactional
     public ClientResponse updateClient(Long id, ClientRequest request) {
