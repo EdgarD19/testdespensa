@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/tipo-movimientos-inventario")
+@RequestMapping("api/v1/tipo-movimientos-inventario")
 public class TipoMovimientoController {
 
     private static final Logger LOGGER = Logger.getLogger(TipoMovimientoController.class.getName());

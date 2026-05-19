@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/client")
+@RequestMapping("api/v1/client")
 public class ClientController {
 
     private static final Logger LOGGER = Logger.getLogger(ProductController.class.getName());

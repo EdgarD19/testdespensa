@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/categories")
+@RequestMapping("api/v1/categories")
 public class CategoryController {
 
     private static final Logger LOGGER = Logger.getLogger(CategoryController.class.getName());

@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/movimientos-inventario")//Transacciones
+@RequestMapping("api/v1/movimientos-inventario")
 public class MovimientoInventarioController {
 
     private static final Logger LOGGER = Logger.getLogger(MovimientoInventarioController.class.getName());
