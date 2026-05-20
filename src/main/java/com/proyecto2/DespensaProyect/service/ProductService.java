@@ -2,6 +2,7 @@ package com.proyecto2.DespensaProyect.service;
 
 import com.proyecto2.DespensaProyect.domain.entity.CategoriaProducto;
 import com.proyecto2.DespensaProyect.domain.entity.Producto;
+import com.proyecto2.DespensaProyect.domain.entity.ProductoProveedor;
 import com.proyecto2.DespensaProyect.domain.entity.Proveedor;
 import com.proyecto2.DespensaProyect.domain.entity.UnidadMedida;
 import com.proyecto2.DespensaProyect.mapper.ProductMapper;
@@ -10,6 +11,7 @@ import com.proyecto2.DespensaProyect.model.request.PatchRequest;
 import com.proyecto2.DespensaProyect.model.request.ProductRequest;
 import com.proyecto2.DespensaProyect.model.response.ProductsResponse;
 import com.proyecto2.DespensaProyect.repository.CategoriaProductoRepository;
+import com.proyecto2.DespensaProyect.repository.ProductoProveedorRepository;
 import com.proyecto2.DespensaProyect.repository.ProductoRepository;
 import com.proyecto2.DespensaProyect.repository.ProveedorRepository;
 import com.proyecto2.DespensaProyect.repository.UnidadMedidaRepository;
@@ -46,6 +48,9 @@ public class ProductService {
     @Autowired
     private ProveedorRepository proveedorRepository;
 
+    @Autowired
+    private ProductoProveedorRepository productoProveedorRepository;
+
     public ProductsResponse getProducts(String search, Integer page, Integer pageSize, String sortBy, String sortDir) {
 
         Sort sort = (sortBy != null && !sortBy.isEmpty()) ? Sort.by(Sort.Direction.fromString(sortDir), sortBy) : Sort.unsorted();
@@ -78,7 +83,14 @@ public class ProductService {
         newProduct.setStockActual(request.getStockActual());
         newProduct.setCategoria(categoria);
         newProduct.setUnidadMedida(unidadMedida);
-        productRepository.save(newProduct);
+        Producto guardado = productRepository.save(newProduct);
+
+        ProductoProveedor vinculo = ProductoProveedor.builder()
+                .producto(guardado)
+                .proveedor(proveedor)
+                .activo(true)
+                .build();
+        productoProveedorRepository.save(vinculo);
     }
 
     public ProductResponse patchProductById(Long id, PatchRequest request) {

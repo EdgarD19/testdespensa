@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ public class ClientController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createClient(
-            @RequestBody(required = true)  ClientRequest request){
+            @Valid @RequestBody(required = true) ClientRequest request) {
         clientService.createClient(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -49,7 +50,7 @@ public class ClientController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateClient(
             @PathVariable("id") Long id,
-            @RequestBody(required = true) ClientRequest request) {
+            @Valid @RequestBody(required = true) ClientRequest request) {
         return ResponseEntity.ok(clientService.updateClient(id, request));
     }
 

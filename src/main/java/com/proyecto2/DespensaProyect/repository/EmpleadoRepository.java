@@ -15,6 +15,8 @@ import java.util.Optional;
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
 
+    Optional<Empleado> findFirstByOrderByIdEmpleadoAsc();
+
     // Buscar por documento
     Optional<Empleado> findByDocumento(String documento);
 

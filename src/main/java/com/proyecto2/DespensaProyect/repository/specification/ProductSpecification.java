@@ -7,14 +7,14 @@ public class ProductSpecification {
     public static Specification<Producto> hasSearch(String search) {
         return (root, query, cb) -> {
             if (search == null || search.trim().isEmpty()) {
-                return cb.conjunction();                        //Siempre verdadera,  No filtra nada,  Permite que otras Specification se sigan aplicando
+                return cb.conjunction();
             }
 
-            String pattern = "%" + search.toLowerCase() + "%";      //convierte a minuscula para preparar para un %like% en la busqueda
+            String pattern = "%" + search.toLowerCase() + "%";
             return cb.or(
-                    cb.like(cb.lower(root.get("name")), pattern),
+                    cb.like(cb.lower(root.get("nombre")), pattern),
                     cb.like(cb.lower(root.get("codigoBarra")), pattern),
-                    cb.like(cb.lower(root.get("description")), pattern)
+                    cb.like(cb.lower(root.get("descripcion")), pattern)
             );
         };
     }
@@ -24,8 +24,7 @@ public class ProductSpecification {
             if (categoryId == null) {
                 return cb.conjunction();
             }
-            return cb.equal(root.get("category").get("id"), categoryId);
+            return cb.equal(root.get("categoria").get("idCategoria"), categoryId);
         };
     }
-
 }
