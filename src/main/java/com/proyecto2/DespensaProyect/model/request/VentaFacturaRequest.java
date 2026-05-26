@@ -35,4 +35,9 @@ public class VentaFacturaRequest {
 
     @JsonProperty("formaPago")
     private String formaPago;
+
+    // Campos adicionales para Transferencia bancaria
+    private String banco;
+    private String comprobante;
+    private String titular;
 }

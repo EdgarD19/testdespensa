@@ -3,7 +3,7 @@ package com.proyecto2.DespensaProyect.repository;
 
 import com.proyecto2.DespensaProyect.domain.entity.Cliente;
 import com.proyecto2.DespensaProyect.domain.entity.Factura;
-import com.proyecto2.DespensaProyect.domain.entity.Pedido;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,10 +27,6 @@ public interface FacturaRepository extends JpaRepository<Factura, Long> {
 
     List<Factura> findByClienteIdCliente(Long idCliente);
 
-    Optional<Factura> findByPedido(Pedido pedido);
-
-    Optional<Factura> findByPedidoIdPedido(Long idPedido);
-
     List<Factura> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
 
     Page<Factura> findByFechaBetweenOrderByFechaDesc(
@@ -40,7 +36,6 @@ public interface FacturaRepository extends JpaRepository<Factura, Long> {
 
     @Query("SELECT f FROM Factura f " +
             "LEFT JOIN FETCH f.cliente " +
-            "LEFT JOIN FETCH f.pedido " +
             "WHERE f.idFactura = :id")
     Optional<Factura> findByIdWithDetails(@Param("id") Long id);
 

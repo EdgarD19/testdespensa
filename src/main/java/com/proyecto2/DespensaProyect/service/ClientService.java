@@ -96,9 +96,6 @@ public void createClient(ClientRequest request){
         if (!clienteRepository.existsById(id)) {
             throw new RuntimeException("Cliente no encontrado con id: " + id);
         }
-        if (clienteRepository.countPedidosByCliente(id) > 0) {
-            throw new RuntimeException("No se puede eliminar el cliente: tiene pedidos asociados");
-        }
         if (clienteRepository.countFacturasByCliente(id) > 0) {
             throw new RuntimeException("No se puede eliminar el cliente: tiene facturas asociadas");
         }

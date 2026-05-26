@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = {"contactos", "pedidos", "facturas"})
+@EqualsAndHashCode(exclude = {"facturas"})
 public class Cliente extends PersonBaseEntity {
 
     @Id
@@ -29,18 +29,14 @@ public class Cliente extends PersonBaseEntity {
     private Ciudad ciudad;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ContactoCliente> contactos;
-
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Pedido> pedidos;
-
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Factura> facturas;
 
     // Constructor sin relaciones
-    public Cliente(Long idCliente, String nombre, String apellido, String documento, String telefono) {
+    public Cliente(Long idCliente, String firstName, String lastName, String phone) {
         this.idCliente = idCliente;
-        this.phone = telefono;
+        setFirstName(firstName);
+        setLastName(lastName);
+        this.phone = phone;
     }
 
     // Método helper
@@ -48,8 +44,6 @@ public class Cliente extends PersonBaseEntity {
         if (getLastName() != null && !getLastName().isEmpty()) {
             return getFirstName() + " " + getLastName();
         }
-        return getLastName();
+        return getFirstName();
     }
-
-
 }

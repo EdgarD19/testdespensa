@@ -40,9 +40,6 @@ public interface ClienteRepository extends  JpaRepository<Cliente, Long>,
             "c.phone LIKE CONCAT('%', :termino, '%')")
     Page<Cliente> buscarPorTermino(@Param("termino") String termino, Pageable pageable);
 
-    @Query("SELECT COUNT(p) FROM Pedido p WHERE p.cliente.idCliente = :id")
-    long countPedidosByCliente(@Param("id") Long idCliente);
-
     @Query("SELECT COUNT(f) FROM Factura f WHERE f.cliente.idCliente = :id")
     long countFacturasByCliente(@Param("id") Long idCliente);
 }

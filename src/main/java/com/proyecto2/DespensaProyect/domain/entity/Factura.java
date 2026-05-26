@@ -9,12 +9,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "factura")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"pedido", "cliente", "detalles"})
-@EqualsAndHashCode(exclude = {"pedido", "cliente", "detalles"})
+@ToString(exclude = {"cliente", "detalles", "formaPago", "transferencias"})
+@EqualsAndHashCode(exclude = {"cliente", "detalles", "formaPago", "transferencias"})
 public class Factura {
 
     @Id
@@ -22,25 +23,28 @@ public class Factura {
     @Column(name = "id_factura")
     private Long idFactura;
 
-    @Column(name = "nro_factura", length = 50)
+    @Column(name = "nro_factura", length = 50, unique = true, nullable = false)
     private String nroFactura;
 
-    @Column(name = "fecha")
+    @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha = LocalDateTime.now();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pedido", referencedColumnName = "id_pedido")
-    private Pedido pedido;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     private Cliente cliente;
 
-    @Column(name = "total", precision = 12, scale = 2)
-    private BigDecimal total;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_forma_pago", referencedColumnName = "id_forma_pago")
+    private FormaPago formaPago;
+
+    @Column(name = "total", nullable = false, precision = 12, scale = 2)
+    private BigDecimal total = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DetalleFactura> detalles;
+
+    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TransferenciaPago> transferencias;
 
     // Método helper para calcular total
     public void calcularTotal() {

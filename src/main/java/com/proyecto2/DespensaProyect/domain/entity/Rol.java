@@ -8,12 +8,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "rol")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"usuarios", "permisos"})
-@EqualsAndHashCode(exclude = {"usuarios", "permisos"})
+@ToString(exclude = {"usuarios"})
+@EqualsAndHashCode(exclude = {"usuarios"})
 public class Rol {
 
     @Id
@@ -24,14 +25,6 @@ public class Rol {
     @Column(name = "nombre", unique = true, nullable = false, length = 50)
     private String nombre;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "rol", fetch = FetchType.LAZY)
     private Set<Usuario> usuarios = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "rol_permiso",
-            joinColumns = @JoinColumn(name = "id_rol"),
-            inverseJoinColumns = @JoinColumn(name = "id_permiso")
-    )
-    private Set<Permisos> permisos = new HashSet<>();
 }

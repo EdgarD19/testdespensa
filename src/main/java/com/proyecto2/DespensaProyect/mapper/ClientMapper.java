@@ -2,11 +2,11 @@ package com.proyecto2.DespensaProyect.mapper;
 
 
 import com.proyecto2.DespensaProyect.domain.entity.Cliente;
-import com.proyecto2.DespensaProyect.domain.entity.ContactoCliente;
+
 import com.proyecto2.DespensaProyect.model.detailResponse.ClientResponse;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+
 
 @Component
 public class ClientMapper {
@@ -25,11 +25,7 @@ public class ClientMapper {
                  .dateBirth(cliente.getDateBirth())
                  .nationality(cliente.getNationality() != null ? cliente.getNationality().getNombre() : null)
                  .gender(cliente.getGender())
-                 .contacts(cliente.getContactos() == null ? List.of() : cliente.getContactos()
-                         .stream()
-                         .map(ContactoCliente::getNombreContacto)
-                         .toList())
-                 .build();
+                  .build();
      }
 
 }

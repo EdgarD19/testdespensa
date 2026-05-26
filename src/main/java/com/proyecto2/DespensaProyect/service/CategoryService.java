@@ -2,10 +2,13 @@ package com.proyecto2.DespensaProyect.service;
 
 import com.proyecto2.DespensaProyect.domain.entity.CategoriaProducto;
 import com.proyecto2.DespensaProyect.model.request.CategoryRequest;
+import com.proyecto2.DespensaProyect.model.response.CategoryResponse;
 import com.proyecto2.DespensaProyect.repository.CategoriaProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -36,6 +39,16 @@ public class CategoryService {
 ////        return new ClientsResponse(responsePage);
 //
 //    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> listCategories() {
+        return repository.findAll().stream()
+                .map(c -> CategoryResponse.builder()
+                        .id(c.getIdCategoria())
+                        .nombre(c.getNombre())
+                        .build())
+                .toList();
+    }
 
     public void createCategory(CategoryRequest request) {
         CategoriaProducto newCategoria = request.toEntity();

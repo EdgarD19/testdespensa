@@ -7,12 +7,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "empleado")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"turnos", "inventarios", "pedidos", "cajas"})
-@EqualsAndHashCode(exclude = {"turnos", "inventarios", "pedidos", "cajas"})
+@ToString(exclude = {"inventarios", "cajas", "ordenesCompra", "usuario"})
+@EqualsAndHashCode(exclude = {"inventarios", "cajas", "ordenesCompra", "usuario"})
 public class Empleado {
 
     @Id
@@ -32,27 +33,19 @@ public class Empleado {
     @Column(name = "telefono", length = 30)
     private String telefono;
 
-    // Relación muchos a uno con RolEmpleado
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")
-    private RolEmpleado rol;
+    // Relación uno a uno con Usuario
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    private Usuario usuario;
 
     // Relación muchos a uno con Ciudad
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ciudad", referencedColumnName = "id_ciudad")
     private Ciudad ciudad;
 
-    // Relación uno a muchos con Turno
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Turno> turnos;
-
     // Relación uno a muchos con Inventario
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Inventario> inventarios;
-
-    // Relación uno a muchos con Pedido
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Pedido> pedidos;
 
     // Relación uno a muchos con Caja
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -61,8 +54,6 @@ public class Empleado {
     // Relación uno a muchos con OrdenCompra
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrdenCompra> ordenesCompra;
-
-
 
     // Método helper para obtener nombre completo
     public String getNombreCompleto() {

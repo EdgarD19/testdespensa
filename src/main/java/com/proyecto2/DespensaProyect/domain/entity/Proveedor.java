@@ -11,8 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"contactos", "productos", "facturasCompra", "pagos", "ordenesCompra"})
-@EqualsAndHashCode(exclude = {"contactos", "productos", "facturasCompra", "pagos", "ordenesCompra"})
+@ToString(exclude = {"contactos", "productos", "facturasCompra", "ordenesCompra"})
+@EqualsAndHashCode(exclude = {"contactos", "productos", "facturasCompra", "ordenesCompra"})
 public class Proveedor {
 
     @Id
@@ -31,9 +31,6 @@ public class Proveedor {
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FacturaCompra> facturasCompra;
-
-    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PagoProveedor> pagos;
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrdenCompra> ordenesCompra;

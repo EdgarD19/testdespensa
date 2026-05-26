@@ -5,10 +5,10 @@ import com.proyecto2.DespensaProyect.model.request.LineaVentaRequest;
 import com.proyecto2.DespensaProyect.model.request.VentaFacturaRequest;
 import com.proyecto2.DespensaProyect.model.response.VentaFacturaResponse;
 import com.proyecto2.DespensaProyect.repository.ClienteRepository;
-import com.proyecto2.DespensaProyect.repository.EmpleadoRepository;
 import com.proyecto2.DespensaProyect.repository.FacturaRepository;
-import com.proyecto2.DespensaProyect.repository.PedidoRepository;
+import com.proyecto2.DespensaProyect.repository.FormaPagoRepository;
 import com.proyecto2.DespensaProyect.repository.ProductoRepository;
+import com.proyecto2.DespensaProyect.repository.TransferenciaPagoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,13 +32,13 @@ public class VentaFacturaService {
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private EmpleadoRepository empleadoRepository;
-
-    @Autowired
-    private PedidoRepository pedidoRepository;
-
-    @Autowired
     private FacturaRepository facturaRepository;
+
+    @Autowired
+    private FormaPagoRepository formaPagoRepository;
+
+    @Autowired
+    private TransferenciaPagoRepository transferenciaPagoRepository;
 
     public VentaFacturaResponse registrar(VentaFacturaRequest request) {
         if (request.getLineas() == null || request.getLineas().isEmpty()) {
@@ -50,8 +50,6 @@ public class VentaFacturaService {
             cliente = clienteRepository.findById(request.getIdCliente())
                     .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + request.getIdCliente()));
         }
-
-        Empleado empleado = empleadoRepository.findFirstByOrderByIdEmpleadoAsc().orElse(null);
 
         List<Producto> productosModificados = new ArrayList<>();
         for (LineaVentaRequest linea : request.getLineas()) {
@@ -67,31 +65,18 @@ public class VentaFacturaService {
         }
         productoRepository.saveAll(productosModificados);
 
-        Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDateTime.now());
-        pedido.setCliente(cliente);
-        pedido.setEmpleado(empleado);
-
-        List<DetallePedido> detallesPedido = new ArrayList<>();
-        for (LineaVentaRequest linea : request.getLineas()) {
-            Producto p = productoRepository.findById(linea.getIdProducto()).orElseThrow();
-            DetallePedido dp = DetallePedido.builder()
-                    .pedido(pedido)
-                    .producto(p)
-                    .cantidad(linea.getCantidad())
-                    .precioUnitario(linea.getPrecioUnitario())
-                    .build();
-            detallesPedido.add(dp);
-        }
-        pedido.setDetalles(detallesPedido);
-        pedido.calcularTotal();
-        pedidoRepository.save(pedido);
-
         Factura factura = new Factura();
-        factura.setPedido(pedido);
         factura.setCliente(cliente);
         factura.setFecha(parseFechaFactura(request.getFechaFactura()));
         factura.setNroFactura(generarNroFacturaUnico());
+
+        // Buscar forma de pago
+        if (request.getFormaPago() != null && !request.getFormaPago().isBlank()) {
+            FormaPago fp = formaPagoRepository.findByDescripcion(request.getFormaPago())
+                    .orElseGet(() -> formaPagoRepository.findByDescripcionContainingIgnoreCase(request.getFormaPago())
+                            .stream().findFirst().orElse(null));
+            factura.setFormaPago(fp);
+        }
 
         List<DetalleFactura> detallesFactura = new ArrayList<>();
         for (LineaVentaRequest linea : request.getLineas()) {
@@ -106,11 +91,25 @@ public class VentaFacturaService {
         }
         factura.setDetalles(detallesFactura);
         factura.calcularTotal();
-        facturaRepository.save(factura);
+        
+        Factura savedFactura = facturaRepository.save(factura);
+
+        // Si la forma de pago es transferencia, guardamos los detalles bancarios
+        if (request.getFormaPago() != null && "Transferencia".equalsIgnoreCase(request.getFormaPago().trim())) {
+            TransferenciaPago tp = TransferenciaPago.builder()
+                    .banco(request.getBanco())
+                    .numeroComprobante(request.getComprobante())
+                    .titular(request.getTitular())
+                    .fechaTransferencia(LocalDateTime.now())
+                    .monto(savedFactura.getTotal())
+                    .factura(savedFactura)
+                    .build();
+            transferenciaPagoRepository.save(tp);
+        }
 
         return VentaFacturaResponse.builder()
-                .idFactura(factura.getIdFactura())
-                .numeroFactura(factura.getNroFactura())
+                .idFactura(savedFactura.getIdFactura())
+                .numeroFactura(savedFactura.getNroFactura())
                 .build();
     }
 

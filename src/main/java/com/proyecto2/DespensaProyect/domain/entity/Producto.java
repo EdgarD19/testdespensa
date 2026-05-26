@@ -18,7 +18,6 @@ import java.util.List;
         "priceHistory",
         "detallesInventario",
         "movimientosInventario",
-        "detallesPedido",
         "detallesFactura",
         "detallesFacturaCompra",
         "detallesOrdenCompra"
@@ -28,7 +27,6 @@ import java.util.List;
         "priceHistory",
         "detallesInventario",
         "movimientosInventario",
-        "detallesPedido",
         "detallesFactura",
         "detallesFacturaCompra",
         "detallesOrdenCompra"
@@ -55,10 +53,10 @@ public class Producto {
     @Column(name = "stock_actual", precision = 10, scale = 2)
     private BigDecimal stockActual = BigDecimal.ZERO;
 
-    // Relación muchos a uno con CategoriaProducto
+    // Relación muchos a uno con SubcategoriaProducto
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
-    private CategoriaProducto categoria;
+    @JoinColumn(name = "id_subcategoria", referencedColumnName = "id_subcategoria")
+    private SubcategoriaProducto subcategoria;
 
     // Relación muchos a uno con UnidadMedida
     @ManyToOne(fetch = FetchType.LAZY)
@@ -79,10 +77,6 @@ public class Producto {
     // Relación uno a muchos con MovimientoInventario
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MovimientoInventario> movimientosInventario;
-
-    // Relación uno a muchos con DetallePedido
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DetallePedido> detallesPedido;
 
     // Relación uno a muchos con DetalleFactura
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

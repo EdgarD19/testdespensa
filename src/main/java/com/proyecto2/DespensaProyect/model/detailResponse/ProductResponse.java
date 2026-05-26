@@ -20,6 +20,9 @@ public class ProductResponse {
     /** stock_actual */
     private BigDecimal stockActual;
 
+    private Long idSubcategoria;
+    private String subcategoryName;
+
     private Long idCategoria;
     private String categoryName;
 

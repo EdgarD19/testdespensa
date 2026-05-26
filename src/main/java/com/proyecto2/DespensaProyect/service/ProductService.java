@@ -1,19 +1,19 @@
 package com.proyecto2.DespensaProyect.service;
 
-import com.proyecto2.DespensaProyect.domain.entity.CategoriaProducto;
 import com.proyecto2.DespensaProyect.domain.entity.Producto;
 import com.proyecto2.DespensaProyect.domain.entity.ProductoProveedor;
 import com.proyecto2.DespensaProyect.domain.entity.Proveedor;
+import com.proyecto2.DespensaProyect.domain.entity.SubcategoriaProducto;
 import com.proyecto2.DespensaProyect.domain.entity.UnidadMedida;
 import com.proyecto2.DespensaProyect.mapper.ProductMapper;
 import com.proyecto2.DespensaProyect.model.detailResponse.ProductResponse;
 import com.proyecto2.DespensaProyect.model.request.PatchRequest;
 import com.proyecto2.DespensaProyect.model.request.ProductRequest;
 import com.proyecto2.DespensaProyect.model.response.ProductsResponse;
-import com.proyecto2.DespensaProyect.repository.CategoriaProductoRepository;
 import com.proyecto2.DespensaProyect.repository.ProductoProveedorRepository;
 import com.proyecto2.DespensaProyect.repository.ProductoRepository;
 import com.proyecto2.DespensaProyect.repository.ProveedorRepository;
+import com.proyecto2.DespensaProyect.repository.SubcategoriaProductoRepository;
 import com.proyecto2.DespensaProyect.repository.UnidadMedidaRepository;
 import com.proyecto2.DespensaProyect.repository.specification.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class ProductService {
     private ProductoRepository productRepository;
 
     @Autowired
-    private CategoriaProductoRepository categoryRepository;
+    private SubcategoriaProductoRepository subcategoryRepository;
 
     @Autowired
     private UnidadMedidaRepository unidadMedidaRepository;
@@ -52,7 +52,6 @@ public class ProductService {
     private ProductoProveedorRepository productoProveedorRepository;
 
     public ProductsResponse getProducts(String search, Integer page, Integer pageSize, String sortBy, String sortDir) {
-
         Sort sort = (sortBy != null && !sortBy.isEmpty()) ? Sort.by(Sort.Direction.fromString(sortDir), sortBy) : Sort.unsorted();
         Pageable pageable = PageRequest.of(page, pageSize, sort);
 
@@ -73,15 +72,16 @@ public class ProductService {
     }
 
     public void createProduct(ProductRequest request) {
-        CategoriaProducto categoria = categoryRepository.findById(request.getIdCategoria()).orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        SubcategoriaProducto subcategoria = subcategoryRepository.findById(request.getIdSubcategoria()).orElseThrow(() -> new RuntimeException("Subcategoria no encontrada"));
         UnidadMedida unidadMedida = unidadMedidaRepository.findById(request.getIdUnidadMedida()).orElseThrow(() -> new RuntimeException("Unidad de medida invalido o no disponible"));
         Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor()).orElseThrow(() -> new RuntimeException("Proveedor invalido o no existe"));
+        
         Producto newProduct = request.toEntity();
         newProduct.setNombre(request.getNombre());
         newProduct.setDescripcion(request.getDescripcion());
         newProduct.setPrecio(request.getPrecio());
         newProduct.setStockActual(request.getStockActual());
-        newProduct.setCategoria(categoria);
+        newProduct.setSubcategoria(subcategoria);
         newProduct.setUnidadMedida(unidadMedida);
         Producto guardado = productRepository.save(newProduct);
 
@@ -104,6 +104,4 @@ public class ProductService {
     public void deleteProductById(Long id ){
         productRepository.deleteById(id);
     }
-
-
 }

@@ -3,6 +3,7 @@ package com.proyecto2.DespensaProyect.mapper;
 import com.proyecto2.DespensaProyect.domain.entity.CategoriaProducto;
 import com.proyecto2.DespensaProyect.domain.entity.Producto;
 import com.proyecto2.DespensaProyect.domain.entity.ProductoProveedor;
+import com.proyecto2.DespensaProyect.domain.entity.SubcategoriaProducto;
 import com.proyecto2.DespensaProyect.domain.entity.UnidadMedida;
 import com.proyecto2.DespensaProyect.model.detailResponse.ProductResponse;
 import org.springframework.stereotype.Component;
@@ -21,12 +22,19 @@ public class ProductMapper {
         BigDecimal precio = producto.getPrecio();
         Double price = precio != null ? precio.doubleValue() : null;
 
+        Long idSubcategoria = null;
+        String subcategoryName = null;
         Long idCategoria = null;
         String categoryName = null;
-        CategoriaProducto cat = producto.getCategoria();
-        if (cat != null) {
-            idCategoria = cat.getIdCategoria();
-            categoryName = cat.getNombre();
+        SubcategoriaProducto sub = producto.getSubcategoria();
+        if (sub != null) {
+            idSubcategoria = sub.getIdSubcategoria();
+            subcategoryName = sub.getNombre();
+            CategoriaProducto cat = sub.getCategoria();
+            if (cat != null) {
+                idCategoria = cat.getIdCategoria();
+                categoryName = cat.getNombre();
+            }
         }
 
         Long idUnidad = null;
@@ -54,6 +62,8 @@ public class ProductMapper {
                 .description(producto.getDescripcion())
                 .code(producto.getCodigoBarra())
                 .stockActual(producto.getStockActual())
+                .idSubcategoria(idSubcategoria)
+                .subcategoryName(subcategoryName)
                 .idCategoria(idCategoria)
                 .categoryName(categoryName)
                 .idUnidad(idUnidad)

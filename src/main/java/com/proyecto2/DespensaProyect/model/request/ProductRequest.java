@@ -28,8 +28,8 @@ public class ProductRequest implements Serializable {
     private BigDecimal precio;
 
     @NotNull
-    @JsonProperty("id_categoria")
-    private Long idCategoria;
+    @JsonProperty("id_subcategoria")
+    private Long idSubcategoria;
 
     @NotNull
     @JsonProperty("id_unidad")

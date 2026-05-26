@@ -21,12 +21,10 @@ public class CategoryController {
     @Autowired
     private CategoryService service;
 
-//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<CategoryResponse>> getCategoria() {
-//        service.getCategory();
-//        return ResponseEntity.ok();
-//    }
-
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CategoryResponse>> getCategorias() {
+        return ResponseEntity.ok(service.listCategories());
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryResponse> createCategory(

@@ -1,7 +1,7 @@
 package com.proyecto2.DespensaProyect.repository;
 
 import com.proyecto2.DespensaProyect.domain.entity.Empleado;
-import com.proyecto2.DespensaProyect.domain.entity.RolEmpleado;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,19 +28,12 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
             String nombre, String apellido
     );
 
-    // Buscar por rol
-    List<Empleado> findByRol(RolEmpleado rol);
-
-    // Buscar por rol ID
-    List<Empleado> findByRolIdRol(Long idRol);
-
     // Buscar por ciudad
     @Query("SELECT e FROM Empleado e WHERE e.ciudad.idCiudad = :idCiudad")
     List<Empleado> findByCiudadId(@Param("idCiudad") Long idCiudad);
 
     // Obtener empleado con todas sus relaciones (para detalles completos)
     @Query("SELECT e FROM Empleado e " +
-            "LEFT JOIN FETCH e.rol " +
             "LEFT JOIN FETCH e.ciudad " +
             "WHERE e.idEmpleado = :id")
     Optional<Empleado> findByIdWithDetails(@Param("id") Long id);
@@ -52,6 +45,5 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
             "e.documento LIKE CONCAT('%', :termino, '%')")
     Page<Empleado> buscarPorTermino(@Param("termino") String termino, Pageable pageable);
 
-    // Contar empleados por rol
-    long countByRolIdRol(Long idRol);
+
 }
