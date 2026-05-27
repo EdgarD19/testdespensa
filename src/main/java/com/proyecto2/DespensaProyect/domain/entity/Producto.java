@@ -58,6 +58,11 @@ public class Producto {
     @JoinColumn(name = "id_subcategoria", referencedColumnName = "id_subcategoria")
     private SubcategoriaProducto subcategoria;
 
+    // Relación muchos a uno con CategoriaProducto
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
+    private CategoriaProducto categoria;
+
     // Relación muchos a uno con UnidadMedida
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_unidad", referencedColumnName = "id_unidad")
