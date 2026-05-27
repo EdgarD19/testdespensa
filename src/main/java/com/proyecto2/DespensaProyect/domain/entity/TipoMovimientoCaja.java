@@ -20,7 +20,7 @@ public class TipoMovimientoCaja {
     @Column(name = "id_tipo_mov_caja")
     private Long idTipoMovCaja;
 
-    @Column(name = "nombre", length = 100)
+    @Column(name = "nombre", nullable = false, unique = true, length = 100)
     private String nombre;
 
     @OneToMany(mappedBy = "tipoMovimientoCaja", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

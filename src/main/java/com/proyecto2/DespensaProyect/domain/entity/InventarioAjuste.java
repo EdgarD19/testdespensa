@@ -42,9 +42,6 @@ public class InventarioAjuste {
     @Column(name = "justificacion", columnDefinition = "TEXT")
     private String justificacion;
 
-    @Column(name = "detalle_otro", columnDefinition = "TEXT")
-    private String detalleOtro;
-
     @Column(name = "autorizado_por", length = 200)
     private String autorizadoPor;
 

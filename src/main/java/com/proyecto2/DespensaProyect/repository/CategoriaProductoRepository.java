@@ -21,6 +21,6 @@ public interface CategoriaProductoRepository extends JpaRepository<CategoriaProd
     @Query("SELECT c FROM CategoriaProducto c ORDER BY c.nombre ASC")
     List<CategoriaProducto> findAllOrderByNombre();
 
-    @Query("SELECT COUNT(p) FROM Producto p WHERE p.categoria.idCategoria = :id")
+    @Query("SELECT COUNT(p) FROM Producto p JOIN p.subcategoria s WHERE s.categoria.idCategoria = :id")
     long countProductosByCategoria(@Param("id") Long idCategoria);
 }

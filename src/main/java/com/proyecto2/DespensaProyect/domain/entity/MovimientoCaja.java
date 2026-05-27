@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"caja", "tipoMovimientoCaja"})
-@EqualsAndHashCode(exclude = {"caja", "tipoMovimientoCaja"})
+@ToString(exclude = {"caja", "tipoMovimientoCaja", "formaPago"})
+@EqualsAndHashCode(exclude = {"caja", "tipoMovimientoCaja", "formaPago"})
 public class MovimientoCaja {
 
     @Id
@@ -29,12 +29,16 @@ public class MovimientoCaja {
     @JoinColumn(name = "id_tipo_mov_caja", referencedColumnName = "id_tipo_mov_caja")
     private TipoMovimientoCaja tipoMovimientoCaja;
 
-    @Column(name = "monto", precision = 12, scale = 2)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_forma_pago", referencedColumnName = "id_forma_pago")
+    private FormaPago formaPago;
+
+    @Column(name = "monto", precision = 12, scale = 2, nullable = false)
     private BigDecimal monto;
 
     @Column(name = "motivo", columnDefinition = "TEXT")
     private String motivo;
 
-    @Column(name = "fecha")
+    @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha = LocalDateTime.now();
 }

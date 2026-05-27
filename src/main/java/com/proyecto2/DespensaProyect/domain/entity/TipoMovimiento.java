@@ -21,7 +21,7 @@ public class TipoMovimiento {
     @Column(name = "id_tipo_movimiento")
     private Long idTipoMovimiento;
 
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(name = "nombre", nullable = false, unique = true, length = 100)
     private String nombre;
 
 

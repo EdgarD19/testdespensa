@@ -1,6 +1,5 @@
 package com.proyecto2.DespensaProyect.controller;
 
-import com.proyecto2.DespensaProyect.model.response.CategoryResponse;
 import com.proyecto2.DespensaProyect.model.response.MaestroItemResponse;
 import com.proyecto2.DespensaProyect.service.MaestrosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,6 @@ public class MaestrosController {
 
     @Autowired
     private MaestrosService maestrosService;
-
-    @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CategoryResponse>> getCategorias() {
-        return ResponseEntity.ok(maestrosService.listCategorias());
-    }
 
     @GetMapping(value = "/unidades-medida", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MaestroItemResponse>> getUnidades() {

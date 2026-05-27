@@ -27,7 +27,7 @@ public class Empleado {
     @Column(name = "apellido", length = 100)
     private String apellido;
 
-    @Column(name = "documento", length = 20)
+    @Column(name = "documento", unique = true, length = 20)
     private String documento;
 
     @Column(name = "telefono", length = 30)

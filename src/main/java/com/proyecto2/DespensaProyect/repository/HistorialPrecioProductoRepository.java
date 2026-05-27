@@ -126,45 +126,4 @@ public interface HistorialPrecioProductoRepository extends JpaRepository<Histori
     boolean existsByProductoIdProductoAndFechaCambioAfter(
             Long idProducto, LocalDateTime fecha);
 
-    // ==================== CONSULTAS POR VIGENCIA ====================
-
-    /**
-     * Obtener el precio vigente actualmente para un producto (y opcionalmente un proveedor)
-     */
-    @Query("SELECT h FROM HistorialPrecioProducto h " +
-            "WHERE h.producto.idProducto = :idProducto " +
-            "AND (:idProveedor IS NULL OR h.proveedor.idProveedor = :idProveedor) " +
-            "AND h.fechaHasta IS NULL " +
-            "ORDER BY h.fechaCambio DESC")
-    Optional<HistorialPrecioProducto> findPrecioVigenteByProducto(
-            @Param("idProducto") Long idProducto,
-            @Param("idProveedor") Long idProveedor);
-
-    /**
-     * Obtener el precio que estaba vigente en una fecha específica
-     */
-    @Query("SELECT h FROM HistorialPrecioProducto h " +
-            "WHERE h.producto.idProducto = :idProducto " +
-            "AND (:idProveedor IS NULL OR h.proveedor.idProveedor = :idProveedor) " +
-            "AND h.fechaDesde <= :fecha " +
-            "AND (h.fechaHasta IS NULL OR h.fechaHasta >= :fecha) " +
-            "ORDER BY h.fechaDesde DESC")
-    Optional<HistorialPrecioProducto> findPrecioPorFecha(
-            @Param("idProducto") Long idProducto,
-            @Param("idProveedor") Long idProveedor,
-            @Param("fecha") LocalDateTime fecha);
-
-    /**
-     * Obtener todos los registros vigentes (fecha_hasta IS NULL)
-     */
-    List<HistorialPrecioProducto> findByFechaHastaIsNull();
-
-    /**
-     * Obtener histórico completo con información de vigencia
-     */
-    @Query("SELECT h FROM HistorialPrecioProducto h " +
-            "WHERE h.producto.idProducto = :idProducto " +
-            "ORDER BY h.fechaDesde DESC")
-    List<HistorialPrecioProducto> findHistorialCompletoByProducto(
-            @Param("idProducto") Long idProducto);
 }

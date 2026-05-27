@@ -15,13 +15,9 @@ public interface RolRepository extends JpaRepository<Rol, Long> {
 
     boolean existsByNombre(String nombre);
 
-    @Query("SELECT r FROM Rol r " +
-            "LEFT JOIN FETCH r.permisos " +
-            "WHERE r.idRol = :id")
+    @Query("SELECT r FROM Rol r WHERE r.idRol = :id")
     Optional<Rol> findByIdWithPermisos(@Param("id") Long id);
 
-    @Query("SELECT r FROM Rol r " +
-            "LEFT JOIN FETCH r.permisos " +
-            "WHERE r.nombre = :nombre")
+    @Query("SELECT r FROM Rol r WHERE r.nombre = :nombre")
     Optional<Rol> findByNombreWithPermisos(@Param("nombre") String nombre);
 }

@@ -28,10 +28,10 @@ public class DetalleOrdenCompra {
     @JoinColumn(name = "id_producto", nullable = false, referencedColumnName = "id_producto")
     private Producto producto;
 
-    @Column(name = "cantidad", nullable = false)
+    @Column(name = "cantidad", nullable = false, precision = 12, scale = 2)
     private BigDecimal cantidad;
 
-    @Column(name = "precio_unitario", nullable = false)
+    @Column(name = "precio_unitario", nullable = false, precision = 12, scale = 2)
     private BigDecimal precioUnitario;
 
     @Transient  //esta anotacion se usa para indicar que un campo no debe persistir en la bd, solo se mantiene durante la ejecucion

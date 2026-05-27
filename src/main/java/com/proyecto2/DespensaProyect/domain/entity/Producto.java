@@ -47,21 +47,16 @@ public class Producto {
     @Column(name = "codigo_producto", length = 20, unique = true, nullable = false)
     private String codigoBarra;
 
-    @Column(name = "precio", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio", nullable = false, precision = 12, scale = 2)
     private BigDecimal precio;
 
-    @Column(name = "stock_actual", precision = 10, scale = 2)
+    @Column(name = "stock_actual", precision = 12, scale = 2, nullable = false)
     private BigDecimal stockActual = BigDecimal.ZERO;
 
     // Relación muchos a uno con SubcategoriaProducto
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_subcategoria", referencedColumnName = "id_subcategoria")
     private SubcategoriaProducto subcategoria;
-
-    // Relación muchos a uno con CategoriaProducto
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
-    private CategoriaProducto categoria;
 
     // Relación muchos a uno con UnidadMedida
     @ManyToOne(fetch = FetchType.LAZY)

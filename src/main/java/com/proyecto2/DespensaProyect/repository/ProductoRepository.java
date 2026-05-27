@@ -1,6 +1,5 @@
 package com.proyecto2.DespensaProyect.repository;
 
-import com.proyecto2.DespensaProyect.domain.entity.CategoriaProducto;
 import com.proyecto2.DespensaProyect.domain.entity.Producto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,14 +35,10 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
     Page<Producto> findBynombreContainingIgnoreCase(String nombre, Pageable pageable);
 
     /**
-     * Buscar por categoría
+     * Buscar por categoría ID (a través de subcategoria)
      */
-    List<Producto> findBycategoria(CategoriaProducto categoria);
-
-    /**
-     * Buscar por categoría ID
-     */
-    List<Producto> findBycategoria_IdCategoria(Long categoriaId);
+    @Query("SELECT p FROM Producto p WHERE p.subcategoria.categoria.idCategoria = :idCategoria")
+    List<Producto> findBycategoria_IdCategoria(@Param("idCategoria") Long categoriaId);
 
     // ==================== BÚSQUEDAS POR PROVEEDOR (NUEVAS - VÍA PRODUCTO_PROVEEDOR) ====================
 
@@ -69,8 +64,9 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * Buscar productos por categoría y proveedor
      */
     @Query("SELECT DISTINCT p FROM Producto p " +
+            "JOIN p.subcategoria s " +
             "JOIN p.proveedores pp " +
-            "WHERE p.categoria.idCategoria = :idCategoria " +
+            "WHERE s.categoria.idCategoria = :idCategoria " +
             "AND pp.proveedor.idProveedor = :idProveedor " +
             "AND pp.activo = true")
     List<Producto> findByCategoriaAndProveedor(
@@ -114,7 +110,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * NOTA: Ahora sin proveedor directo, ya que es relación many-to-many
      */
     @Query("SELECT p FROM Producto p " +
-            "LEFT JOIN FETCH p.categoria " +
+            "LEFT JOIN FETCH p.subcategoria s " +
+            "LEFT JOIN FETCH s.categoria " +
             "LEFT JOIN FETCH p.unidadMedida " +
             "WHERE p.idProducto = :id")
     Optional<Producto> findByIdWithDetails(@Param("id") Long id);
@@ -123,7 +120,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * Buscar producto con proveedores activos
      */
     @Query("SELECT p FROM Producto p " +
-            "LEFT JOIN FETCH p.categoria " +
+            "LEFT JOIN FETCH p.subcategoria s " +
+            "LEFT JOIN FETCH s.categoria " +
             "LEFT JOIN FETCH p.unidadMedida " +
             "LEFT JOIN FETCH p.proveedores pp " +
             "LEFT JOIN FETCH pp.proveedor " +
@@ -136,9 +134,10 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * ACTUALIZADO: Sin proveedor directo
      */
     @Query("SELECT DISTINCT p FROM Producto p " +
+            "LEFT JOIN p.subcategoria s " +
             "LEFT JOIN p.proveedores pp " +
             "WHERE (:nombre IS NULL OR LOWER(p.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))) " +
-            "AND (:idCategoria IS NULL OR p.categoria.idCategoria = :idCategoria) " +
+            "AND (:idCategoria IS NULL OR s.categoria.idCategoria = :idCategoria) " +
             "AND (:idProveedor IS NULL OR (pp.proveedor.idProveedor = :idProveedor AND pp.activo = true))")
     Page<Producto> buscarPorCriterios(
             @Param("nombre") String nombre,
@@ -186,7 +185,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
     /**
      * Contar productos por categoría
      */
-    long countBycategoria_IdCategoria(Long idCategoria);
+    @Query("SELECT COUNT(p) FROM Producto p WHERE p.subcategoria.categoria.idCategoria = :idCategoria")
+    long countBycategoria_IdCategoria(@Param("idCategoria") Long idCategoria);
 
     /**
      * Contar productos por proveedor (ACTUALIZADO)
@@ -219,7 +219,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * Obtener valor total del inventario por categoría
      */
     @Query("SELECT SUM(p.precio * p.stockActual) FROM Producto p " +
-            "WHERE p.categoria.idCategoria = :idCategoria")
+            "JOIN p.subcategoria s WHERE s.categoria.idCategoria = :idCategoria")
     BigDecimal calcularValorInventarioPorCategoria(@Param("idCategoria") Long idCategoria);
 
     /**
@@ -269,7 +269,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
     /**
      * Verificar si hay productos en una categoría
      */
-    boolean existsBycategoria_IdCategoria(Long idCategoria);
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Producto p WHERE p.subcategoria.categoria.idCategoria = :idCategoria")
+    boolean existsBycategoria_IdCategoria(@Param("idCategoria") Long idCategoria);
 
     /**
      * Verificar si hay productos de un proveedor (ACTUALIZADO)
@@ -288,7 +289,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * ACTUALIZADO: Sin proveedor directo
      */
     @Query("SELECT DISTINCT p FROM Producto p " +
-            "LEFT JOIN p.categoria c " +
+            "LEFT JOIN p.subcategoria s " +
+            "LEFT JOIN s.categoria c " +
             "LEFT JOIN p.proveedores pp " +
             "LEFT JOIN pp.proveedor pr " +
             "WHERE (:termino IS NULL OR " +
@@ -318,7 +320,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * ACTUALIZADO: Corregido nombre de tabla
      */
     @Query(value = "SELECT p.* FROM despensa.producto p " +
-            "INNER JOIN despensa.categoria_producto c ON p.id_categoria = c.id_categoria " +
+            "INNER JOIN despensa.subcategoria_producto sc ON p.id_subcategoria = sc.id_subcategoria " +
+            "INNER JOIN despensa.categoria_producto c ON sc.id_categoria = c.id_categoria " +
             "WHERE p.stock_actual > 0 " +
             "ORDER BY p.nombre",
             nativeQuery = true)
@@ -357,9 +360,10 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
      * Productos de una categoría con sus proveedores ordenados por precio
      */
     @Query("SELECT DISTINCT p FROM Producto p " +
+            "JOIN p.subcategoria s " +
             "LEFT JOIN FETCH p.proveedores pp " +
             "LEFT JOIN FETCH pp.proveedor " +
-            "WHERE p.categoria.idCategoria = :idCategoria " +
+            "WHERE s.categoria.idCategoria = :idCategoria " +
             "AND (pp.activo = true OR pp IS NULL) " +
             "ORDER BY pp.precioCosto ASC")
     List<Producto> findByCategoriaWithProveedoresOrderByPrecio(@Param("idCategoria") Long idCategoria);

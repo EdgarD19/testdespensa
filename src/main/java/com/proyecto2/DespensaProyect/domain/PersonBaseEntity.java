@@ -6,10 +6,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @MappedSuperclass
@@ -20,7 +21,7 @@ public abstract class PersonBaseEntity {
     @Column(name = "document_type")
     private String documentType;
 
-    @Column(name = "document_number")
+    @Column(name = "document_number", unique = true)
     private String documentNumber;
 
     @Column(name = "first_name")
@@ -30,12 +31,14 @@ public abstract class PersonBaseEntity {
     private String lastName;
 
     @Column(name = "date_birth")
+    @Temporal(TemporalType.DATE)
     private Date dateBirth;
 
     @ManyToOne
     @JoinColumn(name = "nationality_id_pais")
     private Pais nationality;
 
+    @Column(length = 20)
     private String gender;
 
 }

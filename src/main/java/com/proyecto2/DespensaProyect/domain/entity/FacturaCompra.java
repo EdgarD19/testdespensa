@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"proveedor", "detalles"})
-@EqualsAndHashCode(exclude = {"proveedor", "detalles"})
+@ToString(exclude = {"proveedor", "detalles", "formaPago"})
+@EqualsAndHashCode(exclude = {"proveedor", "detalles", "formaPago"})
 public class FacturaCompra {
 
     @Id
@@ -22,12 +22,16 @@ public class FacturaCompra {
     @Column(name = "id_factura_compra")
     private Long idFacturaCompra;
 
-    @Column(name = "fecha")
+    @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proveedor", referencedColumnName = "id_proveedor")
     private Proveedor proveedor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_forma_pago", referencedColumnName = "id_forma_pago")
+    private FormaPago formaPago;
 
     @Column(name = "total", precision = 12, scale = 2)
     private BigDecimal total;

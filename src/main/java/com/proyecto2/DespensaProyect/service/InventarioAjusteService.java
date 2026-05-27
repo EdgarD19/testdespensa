@@ -76,7 +76,6 @@ public class InventarioAjusteService {
                 .nuevoStock(nuevo)
                 .diferencia(diff)
                 .justificacion(request.getJustificacion() != null ? request.getJustificacion() : "")
-                .detalleOtro(request.getDetalleOtro() != null ? request.getDetalleOtro() : "")
                 .autorizadoPor(request.getAutorizadoPor() != null ? request.getAutorizadoPor().trim() : "")
                 .estado("AUTORIZADO")
                 .build();
@@ -129,7 +128,6 @@ public class InventarioAjusteService {
                 .nuevoStock(a.getNuevoStock())
                 .diferencia(a.getDiferencia())
                 .justificacion(a.getJustificacion())
-                .detalleOtro(a.getDetalleOtro())
                 .autorizadoPor(a.getAutorizadoPor())
                 .estado(a.getEstado())
                 .build();

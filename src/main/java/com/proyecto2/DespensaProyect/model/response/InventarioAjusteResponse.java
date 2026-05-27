@@ -38,9 +38,6 @@ public class InventarioAjusteResponse {
 
     private String justificacion;
 
-    @JsonProperty("detalleOtro")
-    private String detalleOtro;
-
     @JsonProperty("autorizadoPor")
     private String autorizadoPor;
 

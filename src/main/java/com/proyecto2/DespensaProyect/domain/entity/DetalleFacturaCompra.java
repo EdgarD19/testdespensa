@@ -28,10 +28,10 @@ public class DetalleFacturaCompra {
     @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")
     private Producto producto;
 
-    @Column(name = "cantidad", precision = 10, scale = 2)
+    @Column(name = "cantidad", precision = 12, scale = 2, nullable = false)
     private BigDecimal cantidad;
 
-    @Column(name = "precio_unitario", precision = 10, scale = 2)
+    @Column(name = "precio_unitario", precision = 12, scale = 2, nullable = false)
     private BigDecimal precioUnitario;
 
     @Transient

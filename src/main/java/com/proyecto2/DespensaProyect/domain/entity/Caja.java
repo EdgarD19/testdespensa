@@ -20,7 +20,7 @@ public class Caja {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_caja")
-    private Integer idCaja;
+    private Long idCaja;
 
     @Column(name = "fecha_apertura")
     private LocalDateTime fechaApertura = LocalDateTime.now();
@@ -28,13 +28,13 @@ public class Caja {
     @Column(name = "fecha_cierre")
     private LocalDateTime fechaCierre;
 
-    @Column(name = "monto_inicial", precision = 12, scale = 2)
-    private BigDecimal montoInicial;
+    @Column(name = "monto_inicial", precision = 12, scale = 2, nullable = false)
+    private BigDecimal montoInicial = BigDecimal.ZERO;
 
-    @Column(name = "monto_final", precision = 12, scale = 2)
-    private BigDecimal montoFinal;
+    @Column(name = "monto_final", precision = 12, scale = 2, nullable = false)
+    private BigDecimal montoFinal = BigDecimal.ZERO;
 
-    @Column(name = "estado", length = 50)
+    @Column(name = "estado", nullable = false, length = 20)
     private String estado = "ABIERTA";
 
     @ManyToOne(fetch = FetchType.LAZY)

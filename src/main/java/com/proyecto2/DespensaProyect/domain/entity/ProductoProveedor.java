@@ -6,7 +6,8 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "producto_proveedor")
+@Table(name = "producto_proveedor",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"id_producto", "id_proveedor"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

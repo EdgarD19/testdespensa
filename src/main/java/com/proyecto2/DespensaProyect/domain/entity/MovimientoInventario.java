@@ -28,10 +28,10 @@ public class MovimientoInventario {
     @JoinColumn(name = "id_tipo_movimiento", referencedColumnName = "id_tipo_movimiento")
     private TipoMovimiento tipoMovimiento;
 
-    @Column(name = "cantidad", precision = 10, scale = 2)
+    @Column(name = "cantidad", precision = 12, scale = 2, nullable = false)
     private BigDecimal cantidad;
 
-    @Column(name = "fecha")
+    @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha = LocalDateTime.now();
 
     @Column(name = "referencia", columnDefinition = "TEXT")

@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-    @ToString(exclude = {"subcategorias"})
+@ToString(exclude = {"subcategorias"})
 public class CategoriaProducto {
 
     @Id
@@ -20,7 +20,7 @@ public class CategoriaProducto {
     @Column(name = "id_categoria")
     private Long idCategoria;
 
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(name = "nombre", nullable = false, unique = true, length = 100)
     private String nombre;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -21,13 +21,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findByNombreContainingIgnoreCase(String nombre);
 
     @Query("SELECT u FROM Usuario u " +
-            "LEFT JOIN FETCH u.roles " +
+            "LEFT JOIN FETCH u.rol " +
             "WHERE u.username = :username")
     Optional<Usuario> findByUsernameWithRoles(@Param("username") String username);
 
     @Query("SELECT u FROM Usuario u " +
-            "LEFT JOIN FETCH u.roles r " +
-            "LEFT JOIN FETCH r.permisos " +
+            "LEFT JOIN FETCH u.rol " +
             "WHERE u.idUsuario = :id")
     Optional<Usuario> findByIdWithRolesAndPermisos(@Param("id") Long id);
 }

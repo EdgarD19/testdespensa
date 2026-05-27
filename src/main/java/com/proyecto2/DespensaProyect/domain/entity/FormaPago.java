@@ -16,7 +16,7 @@ public class FormaPago {
     @Column(name = "id_forma_pago")
     private Long idFormaPago;
 
-    @Column(name = "descripcion", length = 100)
+    @Column(name = "descripcion", nullable = false, unique = true, length = 100)
     private String descripcion;
 
 
