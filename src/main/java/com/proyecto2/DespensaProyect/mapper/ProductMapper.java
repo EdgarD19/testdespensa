@@ -71,6 +71,8 @@ public class ProductMapper {
                 .unitAbbreviation(unitAbbreviation)
                 .idProveedor(idProveedor)
                 .supplierName(supplierName)
+                .productoPesable(producto.getProductoPesable())
+                .precioPorKg(producto.getPrecioPorKg())
                 .build();
     }
 

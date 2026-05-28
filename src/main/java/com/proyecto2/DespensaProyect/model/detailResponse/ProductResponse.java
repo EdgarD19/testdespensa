@@ -32,4 +32,7 @@ public class ProductResponse {
 
     private Long idProveedor;
     private String supplierName;
+
+    private Boolean productoPesable;
+    private BigDecimal precioPorKg;
 }

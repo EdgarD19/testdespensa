@@ -53,7 +53,12 @@ public class Producto {
     @Column(name = "stock_actual", precision = 12, scale = 2, nullable = false)
     private BigDecimal stockActual = BigDecimal.ZERO;
 
-    // Relación muchos a uno con SubcategoriaProducto
+    @Column(name = "producto_pesable")
+    private Boolean productoPesable = false;
+
+    @Column(name = "precio_por_kg", precision = 12, scale = 2)
+    private BigDecimal precioPorKg;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_subcategoria", referencedColumnName = "id_subcategoria")
     private SubcategoriaProducto subcategoria;

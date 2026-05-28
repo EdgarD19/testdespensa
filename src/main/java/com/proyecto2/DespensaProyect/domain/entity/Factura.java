@@ -40,6 +40,18 @@ public class Factura {
     @Column(name = "total", nullable = false, precision = 12, scale = 2)
     private BigDecimal total = BigDecimal.ZERO;
 
+    @Column(name = "tipo_factura", length = 20)
+    private String tipoFactura;
+
+    @Column(name = "estado", length = 20)
+    private String estado;
+
+    @Column(name = "monto_pagado", precision = 12, scale = 2)
+    private BigDecimal montoPagado;
+
+    @Column(name = "cambio", precision = 12, scale = 2)
+    private BigDecimal cambio;
+
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DetalleFactura> detalles;
 
