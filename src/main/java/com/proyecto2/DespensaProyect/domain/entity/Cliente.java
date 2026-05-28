@@ -21,8 +21,42 @@ public class Cliente extends PersonBaseEntity {
     @Column(name = "id_cliente")
     private Long idCliente;
 
+    @Column(name = "tipo_cliente", length = 20)
+    private String tipoCliente;
+
+    @Column(name = "razon_social", length = 200)
+    private String razonSocial;
+
+    @Column(name = "ruc", length = 50)
+    private String ruc;
+
+    @Column(name = "descripcion_empresa", columnDefinition = "TEXT")
+    private String descripcionEmpresa;
+
+    @Column(name = "contacto_nombre", length = 100)
+    private String contactoNombre;
+
+    @Column(name = "contacto_celular", length = 50)
+    private String contactoCelular;
+
     @Column(name = "phone", length = 30)
     private String phone;
+
+    @Column(name = "celular", length = 50)
+    private String celular;
+
+    @Column(name = "email", length = 150)
+    private String email;
+
+    @Column(name = "direccion", length = 255)
+    private String direccion;
+
+    @Column(name = "activo")
+    @Builder.Default
+    private Boolean activo = true;
+
+    @Column(name = "observaciones", columnDefinition = "TEXT")
+    private String observaciones;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ciudad", referencedColumnName = "id_ciudad")
@@ -31,7 +65,6 @@ public class Cliente extends PersonBaseEntity {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Factura> facturas;
 
-    // Constructor sin relaciones
     public Cliente(Long idCliente, String firstName, String lastName, String phone) {
         this.idCliente = idCliente;
         setFirstName(firstName);
@@ -39,8 +72,10 @@ public class Cliente extends PersonBaseEntity {
         this.phone = phone;
     }
 
-    // Método helper
     public String getNombreCompleto() {
+        if (getRazonSocial() != null && !getRazonSocial().isEmpty()) {
+            return getRazonSocial();
+        }
         if (getLastName() != null && !getLastName().isEmpty()) {
             return getFirstName() + " " + getLastName();
         }

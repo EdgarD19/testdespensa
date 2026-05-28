@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClienteRepository extends  JpaRepository<Cliente, Long>,
-                                            JpaSpecificationExecutor<Cliente> {
+public interface ClienteRepository extends JpaRepository<Cliente, Long>,
+        JpaSpecificationExecutor<Cliente> {
 
     Optional<Cliente> findByDocumentNumber(String documento);
 
@@ -28,15 +28,15 @@ public interface ClienteRepository extends  JpaRepository<Cliente, Long>,
 
     List<Cliente> findByCiudadIdCiudad(Long idCiudad);
 
-    @Query("SELECT c FROM Cliente c " +
-            "LEFT JOIN FETCH c.ciudad " +
-            "WHERE c.idCliente = :id")
+    @Query("SELECT c FROM Cliente c LEFT JOIN FETCH c.ciudad WHERE c.idCliente = :id")
     Optional<Cliente> findByIdWithCiudad(@Param("id") Long id);
 
     @Query("SELECT c FROM Cliente c WHERE " +
             "LOWER(c.firstName) LIKE LOWER(CONCAT('%', :termino, '%')) OR " +
             "LOWER(c.lastName) LIKE LOWER(CONCAT('%', :termino, '%')) OR " +
             "c.documentNumber LIKE CONCAT('%', :termino, '%') OR " +
+            "LOWER(c.razonSocial) LIKE LOWER(CONCAT('%', :termino, '%')) OR " +
+            "c.ruc LIKE CONCAT('%', :termino, '%') OR " +
             "c.phone LIKE CONCAT('%', :termino, '%')")
     Page<Cliente> buscarPorTermino(@Param("termino") String termino, Pageable pageable);
 
