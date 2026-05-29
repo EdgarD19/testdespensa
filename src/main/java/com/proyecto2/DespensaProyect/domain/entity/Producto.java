@@ -60,6 +60,22 @@ public class Producto {
     private BigDecimal precioPorKg;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_marca", referencedColumnName = "id_marca")
+    private Marca marca;
+
+    @Column(name = "precio_compra", precision = 12, scale = 2)
+    private BigDecimal precioCompra;
+
+    @Column(name = "stock_minimo", precision = 12, scale = 2)
+    private BigDecimal stockMinimo;
+
+    @Column(name = "contenido", length = 100)
+    private String contenido;
+
+    @Column(name = "activo")
+    private Boolean activo = true;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_subcategoria", referencedColumnName = "id_subcategoria")
     private SubcategoriaProducto subcategoria;
 

@@ -55,6 +55,13 @@ public class ProductMapper {
             supplierName = ppOpt.get().getProveedor().getNombre();
         }
 
+        Long idMarca = null;
+        String marcaName = null;
+        if (producto.getMarca() != null) {
+            idMarca = producto.getMarca().getIdMarca();
+            marcaName = producto.getMarca().getNombre();
+        }
+
         return ProductResponse.builder()
                 .id(producto.getIdProducto())
                 .name(producto.getNombre())
@@ -73,6 +80,8 @@ public class ProductMapper {
                 .supplierName(supplierName)
                 .productoPesable(producto.getProductoPesable())
                 .precioPorKg(producto.getPrecioPorKg())
+                .idMarca(idMarca)
+                .marcaName(marcaName)
                 .build();
     }
 

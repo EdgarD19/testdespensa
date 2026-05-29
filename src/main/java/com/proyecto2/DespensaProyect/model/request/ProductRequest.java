@@ -27,7 +27,6 @@ public class ProductRequest implements Serializable {
     @JsonProperty("precio")
     private BigDecimal precio;
 
-    @NotNull
     @JsonProperty("id_subcategoria")
     private Long idSubcategoria;
 
@@ -43,11 +42,31 @@ public class ProductRequest implements Serializable {
     @JsonProperty("stock_actual")
     private BigDecimal stockActual;
 
-    @NotNull
     @JsonProperty("codigo_producto")
     @Pattern(regexp = "^[0-9]+$", message = "Solo números")
     @Size(min = 8, max = 13, message = "Debe tener entre 8 y 13 dígitos")
     private String codigoBarra;
+
+    @JsonProperty("id_marca")
+    private Long idMarca;
+
+    @JsonProperty("precio_compra")
+    private BigDecimal precioCompra;
+
+    @JsonProperty("stock_minimo")
+    private BigDecimal stockMinimo;
+
+    @JsonProperty("contenido")
+    private String contenido;
+
+    @JsonProperty("activo")
+    private Boolean activo;
+
+    @JsonProperty("producto_pesable")
+    private Boolean productoPesable;
+
+    @JsonProperty("precio_por_kg")
+    private BigDecimal precioPorKg;
 
     public Producto toEntity(){
         Producto producto = new Producto();
@@ -55,6 +74,7 @@ public class ProductRequest implements Serializable {
         producto.setPrecio(this.getPrecio());
         producto.setCodigoBarra(this.getCodigoBarra());
         producto.setStockActual(this.getStockActual());
+        producto.setProductoPesable(this.getProductoPesable() != null && this.getProductoPesable());
         return producto;
     }
 }

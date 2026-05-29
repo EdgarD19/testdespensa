@@ -119,20 +119,33 @@ INSERT INTO unidad_medida (id_unidad, nombre, abreviatura) VALUES
     (1, 'Gramos', 'gr'),
     (2, 'Litros', 'L'),
     (3, 'Kilogramos', 'Kg'),
-    (4, 'Unidad', 'U');
+    (4, 'Unidad', 'U'),
+    (5, 'Paquete', 'pq'),
+    (6, 'Caja', 'cj'),
+    (7, 'Docena', 'dz');
+
+-- -----------------------------------------------------------------------------
+-- Marcas
+-- -----------------------------------------------------------------------------
+INSERT INTO marca (id_marca, nombre) VALUES
+    (1, 'Mariela'),
+    (2, 'Coca Cola'),
+    (3, 'Nestlé'),
+    (4, 'Procíen'),
+    (5, 'Genérica');
 
 -- -----------------------------------------------------------------------------
 -- Productos (código_producto es el código de barras)
 -- -----------------------------------------------------------------------------
-INSERT INTO producto (id_producto, codigo_producto, nombre, descripcion, precio, stock_actual, id_subcategoria, id_unidad) VALUES
-    (1, '7841516131323', 'Arroz Mariela 500g', 'Arroz largo fino', 3500.00, 50.00, 1, 1),
-    (2, '7841236547890', 'Coca Cola 1L', 'Gaseosa cola 1 litro', 12500.00, 30.00, 2, 2),
-    (3, '7841254694512', 'Agua mineral 500ml', 'Agua sin gas', 4500.00, 40.00, 3, 4),
-    (4, '7847415469451', 'Leche entera 1L', 'Leche pasteurizada', 8900.00, 25.00, 4, 2),
-    (5, '7840001234567', 'Fideos spaghetti 500g', 'Pasta seca', 4200.00, 35.00, 1, 1),
-    (6, '7849988776655', 'Detergente líquido 1L', 'Limpieza ropa', 15800.00, 15.00, 5, 2),
-    (7, '7845566778899', 'Aceite de girasol 900ml', 'Aceite comestible', 11200.00, 20.00, 6, 2),
-    (8, '7843344556677', 'Yerba mate 500g', 'Yerba tradicional', 9800.00, 22.00, 7, 1);
+INSERT INTO producto (id_producto, codigo_producto, nombre, descripcion, precio, stock_actual, id_subcategoria, id_unidad, id_marca, precio_compra, stock_minimo, activo) VALUES
+    (1, '7841516131323', 'Arroz Mariela 500g', 'Arroz largo fino', 3500.00, 50.00, 1, 1, 1, 2800.00, 10.00, true),
+    (2, '7841236547890', 'Coca Cola 1L', 'Gaseosa cola 1 litro', 12500.00, 30.00, 2, 2, 2, 9800.00, 5.00, true),
+    (3, '7841254694512', 'Agua mineral 500ml', 'Agua sin gas', 4500.00, 40.00, 3, 4, 5, 3200.00, 10.00, true),
+    (4, '7847415469451', 'Leche entera 1L', 'Leche pasteurizada', 8900.00, 25.00, 4, 2, 3, 7200.00, 5.00, true),
+    (5, '7840001234567', 'Fideos spaghetti 500g', 'Pasta seca', 4200.00, 35.00, 1, 1, 1, 3100.00, 10.00, true),
+    (6, '7849988776655', 'Detergente líquido 1L', 'Limpieza ropa', 15800.00, 15.00, 5, 2, 4, 12500.00, 3.00, true),
+    (7, '7845566778899', 'Aceite de girasol 900ml', 'Aceite comestible', 11200.00, 20.00, 6, 2, 5, 8900.00, 5.00, true),
+    (8, '7843344556677', 'Yerba mate 500g', 'Yerba tradicional', 9800.00, 22.00, 7, 1, 5, 7500.00, 5.00, true);
 
 -- -----------------------------------------------------------------------------
 -- Vínculo Producto-Proveedor y Costos
@@ -153,6 +166,21 @@ INSERT INTO producto_proveedor (id_producto_proveedor, id_producto, id_proveedor
 INSERT INTO forma_pago (id_forma_pago, descripcion) VALUES
     (1, 'Efectivo'),
     (2, 'Transferencia');
+
+-- -----------------------------------------------------------------------------
+-- Rubros (categorias de proveedor)
+-- -----------------------------------------------------------------------------
+INSERT INTO rubro (id_rubro, nombre) VALUES
+    (1, 'Alimentos y Bebidas'),
+    (2, 'Limpieza'),
+    (3, 'Higiene Personal'),
+    (4, 'Electrónica'),
+    (5, 'Ferretería'),
+    (6, 'Indumentaria'),
+    (7, 'Papelería'),
+    (8, 'Muebles'),
+    (9, 'Farmacia'),
+    (10, 'Otros');
 
 -- -----------------------------------------------------------------------------
 -- Tipos de Movimiento (Caja e Inventario)
@@ -180,9 +208,11 @@ SELECT setval('contacto_proveedor_id_contacto_proveedor_seq', (SELECT COALESCE(M
 SELECT setval('categoria_producto_id_categoria_seq', (SELECT COALESCE(MAX(id_categoria), 1) FROM categoria_producto));
 SELECT setval('subcategoria_producto_id_subcategoria_seq', (SELECT COALESCE(MAX(id_subcategoria), 1) FROM subcategoria_producto));
 SELECT setval('unidad_medida_id_unidad_seq', (SELECT COALESCE(MAX(id_unidad), 1) FROM unidad_medida));
+SELECT setval('marca_id_marca_seq', (SELECT COALESCE(MAX(id_marca), 1) FROM marca));
 SELECT setval('producto_id_producto_seq', (SELECT COALESCE(MAX(id_producto), 1) FROM producto));
 SELECT setval('producto_proveedor_id_producto_proveedor_seq', (SELECT COALESCE(MAX(id_producto_proveedor), 1) FROM producto_proveedor));
 SELECT setval('forma_pago_id_forma_pago_seq', (SELECT COALESCE(MAX(id_forma_pago), 1) FROM forma_pago));
+SELECT setval('rubro_id_rubro_seq', (SELECT COALESCE(MAX(id_rubro), 1) FROM rubro));
 SELECT setval('tipo_movimiento_caja_id_tipo_mov_caja_seq', (SELECT COALESCE(MAX(id_tipo_mov_caja), 1) FROM tipo_movimiento_caja));
 SELECT setval('tipo_movimiento_id_tipo_movimiento_seq', (SELECT COALESCE(MAX(id_tipo_movimiento), 1) FROM tipo_movimiento));
 

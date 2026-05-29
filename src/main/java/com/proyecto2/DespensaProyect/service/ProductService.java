@@ -1,5 +1,6 @@
 package com.proyecto2.DespensaProyect.service;
 
+import com.proyecto2.DespensaProyect.domain.entity.Marca;
 import com.proyecto2.DespensaProyect.domain.entity.Producto;
 import com.proyecto2.DespensaProyect.domain.entity.ProductoProveedor;
 import com.proyecto2.DespensaProyect.domain.entity.Proveedor;
@@ -11,6 +12,7 @@ import com.proyecto2.DespensaProyect.model.request.PatchRequest;
 import com.proyecto2.DespensaProyect.model.request.ProductRequest;
 import com.proyecto2.DespensaProyect.model.response.ProductsResponse;
 import com.proyecto2.DespensaProyect.repository.ProductoProveedorRepository;
+import com.proyecto2.DespensaProyect.repository.MarcaRepository;
 import com.proyecto2.DespensaProyect.repository.ProductoRepository;
 import com.proyecto2.DespensaProyect.repository.ProveedorRepository;
 import com.proyecto2.DespensaProyect.repository.SubcategoriaProductoRepository;
@@ -51,6 +53,9 @@ public class ProductService {
     @Autowired
     private ProductoProveedorRepository productoProveedorRepository;
 
+    @Autowired
+    private MarcaRepository marcaRepository;
+
     public ProductsResponse getProducts(String search, Integer page, Integer pageSize, String sortBy, String sortDir) {
         Sort sort = (sortBy != null && !sortBy.isEmpty()) ? Sort.by(Sort.Direction.fromString(sortDir), sortBy) : Sort.unsorted();
         Pageable pageable = PageRequest.of(page, pageSize, sort);
@@ -72,7 +77,6 @@ public class ProductService {
     }
 
     public void createProduct(ProductRequest request) {
-        SubcategoriaProducto subcategoria = subcategoryRepository.findById(request.getIdSubcategoria()).orElseThrow(() -> new RuntimeException("Subcategoria no encontrada"));
         UnidadMedida unidadMedida = unidadMedidaRepository.findById(request.getIdUnidadMedida()).orElseThrow(() -> new RuntimeException("Unidad de medida invalido o no disponible"));
         Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor()).orElseThrow(() -> new RuntimeException("Proveedor invalido o no existe"));
         
@@ -81,8 +85,20 @@ public class ProductService {
         newProduct.setDescripcion(request.getDescripcion());
         newProduct.setPrecio(request.getPrecio());
         newProduct.setStockActual(request.getStockActual());
-        newProduct.setSubcategoria(subcategoria);
+        if (request.getIdSubcategoria() != null) {
+            SubcategoriaProducto subcategoria = subcategoryRepository.findById(request.getIdSubcategoria()).orElseThrow(() -> new RuntimeException("Subcategoria no encontrada"));
+            newProduct.setSubcategoria(subcategoria);
+        }
         newProduct.setUnidadMedida(unidadMedida);
+        if (request.getIdMarca() != null) {
+            Marca marca = marcaRepository.findById(request.getIdMarca())
+                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+            newProduct.setMarca(marca);
+        }
+        newProduct.setPrecioCompra(request.getPrecioCompra());
+        newProduct.setStockMinimo(request.getStockMinimo());
+        newProduct.setContenido(request.getContenido());
+        newProduct.setActivo(request.getActivo() != null ? request.getActivo() : true);
         Producto guardado = productRepository.save(newProduct);
 
         ProductoProveedor vinculo = ProductoProveedor.builder()
@@ -97,6 +113,51 @@ public class ProductService {
         Producto producto = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         if (request.getPrecio() != null) {
             producto.setPrecio(request.getPrecio());
+        }
+        if (request.getNombre() != null) {
+            producto.setNombre(request.getNombre());
+        }
+        if (request.getDescripcion() != null) {
+            producto.setDescripcion(request.getDescripcion());
+        }
+        if (request.getCodigoBarra() != null) {
+            producto.setCodigoBarra(request.getCodigoBarra());
+        }
+        if (request.getIdSubcategoria() != null) {
+            SubcategoriaProducto sub = subcategoryRepository.findById(request.getIdSubcategoria())
+                .orElseThrow(() -> new RuntimeException("Subcategoria no encontrada"));
+            producto.setSubcategoria(sub);
+        }
+        if (request.getIdUnidadMedida() != null) {
+            UnidadMedida um = unidadMedidaRepository.findById(request.getIdUnidadMedida())
+                .orElseThrow(() -> new RuntimeException("Unidad de medida no encontrada"));
+            producto.setUnidadMedida(um);
+        }
+        if (request.getStockActual() != null) {
+            producto.setStockActual(request.getStockActual());
+        }
+        if (request.getProductoPesable() != null) {
+            producto.setProductoPesable(request.getProductoPesable());
+        }
+        if (request.getPrecioPorKg() != null) {
+            producto.setPrecioPorKg(request.getPrecioPorKg());
+        }
+        if (request.getIdMarca() != null) {
+            Marca marca = marcaRepository.findById(request.getIdMarca())
+                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+            producto.setMarca(marca);
+        }
+        if (request.getPrecioCompra() != null) {
+            producto.setPrecioCompra(request.getPrecioCompra());
+        }
+        if (request.getStockMinimo() != null) {
+            producto.setStockMinimo(request.getStockMinimo());
+        }
+        if (request.getContenido() != null) {
+            producto.setContenido(request.getContenido());
+        }
+        if (request.getActivo() != null) {
+            producto.setActivo(request.getActivo());
         }
         return mapper.toResponse(productRepository.save(producto));
     }

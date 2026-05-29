@@ -32,8 +32,28 @@ public class MaestrosController {
         return ResponseEntity.ok(maestrosService.listProveedores());
     }
 
+    @GetMapping(value = "/marcas", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MaestroItemResponse>> getMarcas() {
+        return ResponseEntity.ok(maestrosService.listMarcas());
+    }
+
     @GetMapping(value = "/categories/{id}/subcategorias", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MaestroItemResponse>> getSubcategorias(@PathVariable("id") Long idCategoria) {
         return ResponseEntity.ok(maestrosService.listSubcategorias(idCategoria));
+    }
+
+    @GetMapping(value = "/rubros", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MaestroItemResponse>> getRubros() {
+        return ResponseEntity.ok(maestrosService.listRubros());
+    }
+
+    @GetMapping(value = "/paises", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MaestroItemResponse>> getPaises() {
+        return ResponseEntity.ok(maestrosService.listPaises());
+    }
+
+    @GetMapping(value = "/paises/{id}/ciudades", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MaestroItemResponse>> getCiudades(@PathVariable("id") Long idPais) {
+        return ResponseEntity.ok(maestrosService.listCiudades(idPais));
     }
 }

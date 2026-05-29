@@ -35,4 +35,7 @@ public class ProductResponse {
 
     private Boolean productoPesable;
     private BigDecimal precioPorKg;
+
+    private Long idMarca;
+    private String marcaName;
 }
